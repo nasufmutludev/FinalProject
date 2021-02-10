@@ -19,9 +19,9 @@ namespace Business.Concrete
             _productDal = productDal;
         }
 
-        public List<Product> GetByUnitPrice(decimal min, decimal max)
+        public IDataResult<List<Product>> GetByUnitPrice(decimal min, decimal max)
         {
-            return _productDal.GetAll(x => x.UnitPrice >= min && x.UnitPrice <= max);
+            return new SuccessDataResult<List<Product>>(_productDal.GetAll(x => x.UnitPrice >= min && x.UnitPrice <= max));
         }
 
         public IDataResult<List<Product>> GetAll()
@@ -33,14 +33,14 @@ namespace Business.Concrete
             return new SuccessDataResult<List<Product>>(_productDal.GetAll(),Messages.ProductsListed);
         }
 
-        public List<Product> GetAllByCategoryId(int id)
+        public IDataResult<List<Product>> GetAllByCategoryId(int id)
         {
-            return _productDal.GetAll(x => x.CategoryId == id);
+            return new SuccessDataResult<List<Product>>(_productDal.GetAll(x => x.CategoryId == id));
         }
 
-        public List<ProductDetailDto> GetProductDetails()
+        public IDataResult<List<ProductDetailDto>> GetProductDetails()
         {
-            return _productDal.GetProductDetails();
+            return new SuccessDataResult<List<ProductDetailDto>>(_productDal.GetProductDetails(),Messages.ProductsListed);
         }
 
         public IResult Add(Product product)
@@ -51,6 +51,6 @@ namespace Business.Concrete
             }
             _productDal.Add(product);
             return new SuccessResult(Messages.ProductAdded);
-        }
+        }        
     }
 }
