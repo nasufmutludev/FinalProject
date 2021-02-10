@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Business.Constants;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -23,9 +24,13 @@ namespace Business.Concrete
             return _productDal.GetAll(x => x.UnitPrice >= min && x.UnitPrice <= max);
         }
 
-        public List<Product> GetAll()
+        public IDataResult<List<Product>> GetAll()
         {
-            return _productDal.GetAll();
+            if (DateTime.Now.Hour==22)
+            {
+                return new ErrorDataResult<List<Product>>(Messages.MaintenanceTime);
+            }
+            return new SuccessDataResult<List<Product>>(_productDal.GetAll(),Messages.ProductsListed);
         }
 
         public List<Product> GetAllByCategoryId(int id)
@@ -42,10 +47,10 @@ namespace Business.Concrete
         {
             if (product.ProductName.Length < 2)
             {
-                return new ErrorResult("Ürün ismi en az 2 karakter olmalıdır.");
+                return new ErrorResult(Messages.ProductNameInvaid);
             }
             _productDal.Add(product);
-            return new SuccessResult("Ürün eklendi.");
+            return new SuccessResult(Messages.ProductAdded);
         }
     }
 }
