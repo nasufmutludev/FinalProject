@@ -1,12 +1,17 @@
 ﻿using Business.Abstract;
 using Business.Constants;
+using Business.ValidationRules.FluentValidation;
+using Core.CrossCuttingConcerns.Validation;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using Entities.DTOs;
+using FluentValidation;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
+using ValidationException = FluentValidation.ValidationException;
 
 namespace Business.Concrete
 {
@@ -26,10 +31,10 @@ namespace Business.Concrete
 
         public IDataResult<List<Product>> GetAll()
         {
-            //if (DateTime.Now.Hour==22)
-            //{
-            //    return new ErrorDataResult<List<Product>>(Messages.MaintenanceTime);
-            //}
+            if (DateTime.Now.Hour == 1)
+            {
+                return new ErrorDataResult<List<Product>>(Messages.MaintenanceTime);
+            }
             return new SuccessDataResult<List<Product>>(_productDal.GetAll(),Messages.ProductsListed);
         }
 
@@ -45,12 +50,18 @@ namespace Business.Concrete
 
         public IResult Add(Product product)
         {
-            if (product.ProductName.Length < 2)
-            {
-                return new ErrorResult(Messages.ProductNameInvaid);
-            }
+            ValidationTool.Validate(new ProductValidator(), product);
+            //if (product.ProductName.Length < 2)
+            //{
+            //    return new ErrorResult(Messages.ProductNameInvaid);
+            //}
             _productDal.Add(product);
             return new SuccessResult(Messages.ProductAdded);
-        }        
+        }
+
+        public IDataResult<List<Product>> GetById(int id)
+        {
+            return new SuccessDataResult<List<Product>>(_productDal.GetAll(x => x.ProductId == id));
+        }
     }
 }
