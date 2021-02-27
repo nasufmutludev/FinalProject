@@ -6,14 +6,14 @@ namespace Core.Utilities.Results
 {
     public class Result : IResult
     {
-        //this tek parametre ile çalışmak için kullanılır.classın kendisidir.
+
         public Result(bool success, string message):this(success)
         {
-            Message = message;            
+            Message = message;
         }
-        //Eger mesaj verdirmek istemiyorsak
+
         public Result(bool success)
-        {           
+        {
             Success = success;
         }
 

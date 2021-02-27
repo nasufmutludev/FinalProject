@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-
 namespace DataAccess.Abstract
 {
     public interface IProductDal:IEntityRepository<Product>
@@ -14,4 +13,4 @@ namespace DataAccess.Abstract
     }
 }
 
-//Code refactoring
+//Code Refactoring
