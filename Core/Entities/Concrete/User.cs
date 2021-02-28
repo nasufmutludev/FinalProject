@@ -12,8 +12,6 @@ namespace Core.Entities.Concrete
         public string Email { get; set; }
         public byte[] PasswordSalt { get; set; }
         public byte[] PasswordHash { get; set; }
-        public bool Status { get; set; }
-
-        //22:05 Dersteyiz
+        public bool Status { get; set; }        
     }
 }
