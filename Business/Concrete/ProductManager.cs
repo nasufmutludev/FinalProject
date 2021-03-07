@@ -13,6 +13,8 @@ using Entities.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using Core.Aspects.Autofac.Performance;
 
 namespace Business.Concrete
 {
@@ -35,7 +37,7 @@ namespace Business.Concrete
         {
             //Aynı isimde ürün eklenemez
             //Eğer mevcut kategori sayısı 15'i geçtiyse sisteme yeni ürün eklenemez. ve 
-            IResult result = BusinessRules.Run(CheckIfProductNameExists(product.ProductName), 
+            IResult result = BusinessRules.Run(CheckIfProductNameExists(product.ProductName),  
                 CheckIfProductCountOfCategoryCorrect(product.CategoryId), CheckIfCategoryLimitExceded());
 
             if (result != null)
@@ -49,13 +51,14 @@ namespace Business.Concrete
         }
 
         [CacheAspect]//Key,value
+        [PerformanceAspect(5)]
         public IDataResult<List<Product>> GetAll()
         {
             if (DateTime.Now.Hour == 1)
             {
                 return new ErrorDataResult<List<Product>>(Messages.MaintenanceTime);
             }
-
+            Thread.Sleep(5000);
             return new SuccessDataResult<List<Product>>(_productDal.GetAll(), Messages.ProductsListed);
         }
 
@@ -85,6 +88,7 @@ namespace Business.Concrete
 
         [ValidationAspect(typeof(ProductValidator))]
         [CacheRemoveAspect("IProductService.Get")]
+
         public IResult Update(Product product)
         {
             var result = _productDal.GetAll(p => p.CategoryId == product.CategoryId).Count;
