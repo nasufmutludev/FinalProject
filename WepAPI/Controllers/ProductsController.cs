@@ -1,9 +1,9 @@
-﻿using Business.Abstract;
+﻿using System.Threading;
+using Business.Abstract;
 using Entities.Concrete;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading;
 
-namespace WebAPI.Controllers
+namespace WepAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
